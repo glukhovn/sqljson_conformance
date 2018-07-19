@@ -1,0 +1,67 @@
+feauture                        |PostgresSQL 11.0	|Oracle 18c |MySQL 8.0.4	|MS SQL Server 2017	|	comments
+
+JSON_OBJECT
+JSON_OBJECT(k : v)              |+	|-	|+/-|-	|	MySQL: JSON_OBJECT(k, v, ...) syntax, duplicate keys removed
+JSON_OBJECT(KEY k VALUE v)      |-	|+*	|-	|-	|	Oracle: duplicate keys removed
+JSON_OBJECT(k VALUE v)          |+	|+*	|-	|-	|	Oracle: duplicate keys removed
+JSON_OBJECT(WITH UNIQUE)        |+	|+	|-	|-	|
+JSON_OBJECT(WITHOUT UNIQUE)     |+	|-	|-	|-	|
+JSON_OBJECT(ABSENT ON NULL)     |+	|+	|-	|-	|
+JSON_OBJECT(NULL ON NULL)       |+	|+	|-	|-	|
+
+JSON_ARRAY
+JSON_ARRAY()                    |+	|+	|+/-|-	|	MySQL: NULL ON NULL by default
+JSON_ARRAY(ABSENT ON NULL)      |+	|+	|-	|-	|
+JSON_ARRAY(NULL ON NULL)        |+	|+	|-	|-	|
+JSON_ARRAY(subquery)            |+/-|-	|-	|-	|	PostgreSQL: <subquery> FORMAT JSON is not supported
+
+JSON_OBJECTAGG, JSON_ARRAYAGG
+JSON_OBJECTAGG()                |+	|+	|+/-|-	|	MySQL: k, v
+JSON_ARRAYAGG()                 |+	|+	|+/-|-	|	MySQL: NULL ON NULL by default
+
+RETURNING
+JSON_CTOR(RETURNING type)       |+	|+*	|-	|-	|	Oracle: only VARCHAR2, BLOB, and CLOB supported
+JSON_CTOR(RETURNING FORMAT)     |+	|+	|-	|-	|
+JSON_CTOR(ENCODING enc)         |+	|-	|-	|-	|
+
+FORMAT JSON
+input FORMAT JSON               |+	|+/-|-	|-	|	Oracle: input JSON is not verified
+
+IS JSON
+IS [NOT] JSON                   |+/-|+/-|-*	|-*	|	PostgreSQL: "expr FORMAT JSON IS JSON" not supported; Oracle: in WHERE only; MS SQL: ISJSON() function; MySQL: JSON_VALID() function
+IS JSON type                    |+	|-	|-	|-	|
+
+JSON_EXISTS
+JSON_EXISTS()                   |+	|+/-|-*	|-	|	Oracle: only in WHERE or CASE; MySQL: JSON_CONTAINS_PATH()
+JSON_EXISTS(ON ERROR)           |+	|+/-|-	|-	|	Oracle: UNKNOWN ON ERROR is not supported
+
+JSON_VALUE()                    |+	|+	|-*	|+	|	MySQL: JSON_EXTRACT() is similar
+JSON_VALUE(RETURNING)           |+	|+*	|-	|-	|	Oracle: only VARCHAR2, NUMBER, SDO_GEOMETRY
+JSON_VALUE(ON ERROR/EMPTY)      |+	|+*	|-	|-	|	Oracle: ERROR ON EMPTY is not handled by ON ERROR, DEFAULT type should match RETURNING type
+
+JSON_QUERY
+JSON_QUERY()                    |+	|+	|-*	|+	|	MySQL: JSON_EXTRACT() is similar
+JSON_QUERY(WITH WRAPPER)        |+	|+*	|-	|-	|	Oracle: scalars without wrapper not supported
+JSON_QUERY(ON ERROR/EMPTY)      |+	|+	|-	|-	|
+
+JSON_TABLE
+JSON_TABLE()                    |+	|+	|+*	|-	|	MySQL: column's PATH is required, type JSON instead of FORMAT JSON, EXISTS PATH extension
+JSON_TABLE nested paths         |+	|+*	|+	|-	|	Oracle: nested path expressions should be disjunct
+JSON_TABLE plans                |+	|-	|-	|-	|
+
+JSON path
+JSON path basic accessors       |+	|+	|+	|+	|
+JSON path strict/lax            |+	|-	|-	|+	|	Oracle, MySQL: lax only supported
+JSON path filters               |+	|+/-|-	|-	|	Oracle: only one filter at the end and only in JSON_EXISTS
+JSON path .*                    |+	|+	|+	|-	|  
+JSON path [*]                   |+	|+	|+	|-	|
+JSON path [x, y]                |+	|+	|-	|-	|
+JSON path [x to y]              |+	|+	|+	|-	|
+JSON path [last]                |+	|-	|+	|-	|	MySQL: only "[last]" or "[last - integer_const]" is supported
+JSON path [expr]                |+	|-	|-	|-	|
+JSON path starts_with           |+	|+	|-	|-	|	Oracle: only in filter in in JSON_EXISTS
+JSON path like_regex            |+	|+/-|-	|-	|	Oracle: only in filter in in JSON_EXISTS, flags are not supported
+JSON path item methods          |+	|+/-|-	|-	|	Oracle: only one method at the end of path, non-standard names
+JSON path .datetime()           |+	|+/-|-	|-	|	Oracle: non-standard item method names, no datetime formats, can not return datetime type
+JSON path arithmetic expressions|+	|-	|-	|-	|
+JSON path PASSING parameters    |+	|+/-|-	|-	|	Oracle: only in filter in JSON_EXISTS
